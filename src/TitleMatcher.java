@@ -1,3 +1,5 @@
+import java.util.Locale;
+
 public class TitleMatcher implements BookMatcher{
 
     private String toMatch;
@@ -8,6 +10,6 @@ public class TitleMatcher implements BookMatcher{
 
     @Override
     public boolean matches(Book bookToMatch) {
-        return toMatch.equalsIgnoreCase(bookToMatch.getTitle());
+        return bookToMatch.getTitle().toLowerCase().contains(toMatch.toLowerCase());
     }
 }

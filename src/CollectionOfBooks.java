@@ -10,12 +10,18 @@ public class CollectionOfBooks {
     }
 
     public void addBook(Book book) throws IllegalArgumentException {
-        if(book == null) throw new IllegalArgumentException("Ingen bok angiven");
+        boolean exists = false;
+        for (Book theBook : theBooks) {
+            if (theBook.getIsbn().equals(book.getIsbn()))
+                exists = true;
+        }
+        if(book == null) throw new IllegalArgumentException("Argument is null");
+        if (exists) throw new IllegalArgumentException("ISBN-number already exists");
         theBooks.add(book);
     }
 
     public void addBook(List<Book> book) throws IllegalArgumentException {
-        if(book == null) throw new IllegalArgumentException("Ingen bok angiven");
+        if(book == null) throw new IllegalArgumentException("No book is entered");
         theBooks.addAll(book);
     }
 
@@ -39,9 +45,11 @@ public class CollectionOfBooks {
 
     @Override
     public String toString() {
-        return "CollectionOfBooks{" +
-                "theBooks=" + theBooks +
-                '}';
+        StringBuilder info = new StringBuilder(10);
+        for (Book theBook : theBooks) {
+            info.append(theBook.toString() + '\n');
+        }
+        return info.toString();
     }
 }
 

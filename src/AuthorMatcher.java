@@ -11,7 +11,7 @@ public class AuthorMatcher implements BookMatcher{
     @Override
     public boolean matches(Book bookToMatch) {
         for (Author author : bookToMatch.getAuthors()) {
-            if (toMatch.equalsIgnoreCase(author.getName()))
+            if (author.getName().toLowerCase().contains(toMatch.toLowerCase()))
                 return true;
         }
         return false;

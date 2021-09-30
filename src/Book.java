@@ -1,5 +1,6 @@
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,8 +10,8 @@ public class Book implements Comparable, Serializable {
     private final Isbn isbn;
     private final Genre genre;
     private int rating;
+    private LocalDate releaseDate;
     private ArrayList<Author> authors;
-
 
     /**
      *
@@ -20,6 +21,12 @@ public class Book implements Comparable, Serializable {
      * @param author
      * @param rating
      */
+    public Book(String title, Genre genre, Isbn isbn, Author author, int rating, LocalDate releaseDate) {
+        this(title, genre, isbn, author);
+        setRating(rating);
+        this.releaseDate = releaseDate;
+    }
+
     public Book(String title, Genre genre, Isbn isbn, Author author, int rating) {
         this(title, genre, isbn, author);
         setRating(rating);
@@ -50,8 +57,10 @@ public class Book implements Comparable, Serializable {
         this.genre = genre;
     }
 
-    public void setRating(int rating) {
-        this.rating = rating;
+    public void setRating(int rating) throws IllegalArgumentException {
+        if (rating >= 1 && rating <=5)
+            this.rating = rating;
+        else throw new IllegalArgumentException("Rating must be 1 to 5");
     }
 
     public void addAuthor (Author author){
@@ -83,5 +92,14 @@ public class Book implements Comparable, Serializable {
     public boolean equals(Object obj) {
         Book tmp = (Book) obj;
         return this.compareTo(tmp) == 0;
+    }
+
+    @Override
+    public String toString() {
+        return  title +
+                ", authors: " + authors +
+                ", genre: " + genre +
+                ", rating: " + rating +
+                ", isbn: " + isbn;
     }
 }
