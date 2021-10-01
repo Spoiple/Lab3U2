@@ -1,5 +1,12 @@
+/**
+ * Interface used to match books with different searching criteria
+ */
 public interface BookMatcher {
 
-
-    public abstract boolean matches(Book bookToMatch);
+    /**
+     * Checks if books matches
+     * @param bookToMatch book to apply bookMatcher method to
+     * @return true if book matches, false if not
+     */
+    boolean matches(Book bookToMatch);
 }

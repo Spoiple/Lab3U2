@@ -7,23 +7,39 @@ public class UserInterface {
     private CollectionOfBooks theCollection;
     private Scanner scan;
 
+    /**
+     * A text based user interface.
+     */
     public UserInterface() {
         theCollection = new CollectionOfBooks();
         scan = new Scanner(System.in);
     }
 
+    /**
+     * Start UI
+     */
     public void run() {
+        String filename;
+        System.out.println("Enter file to load books from: ");
+        filename = scan.nextLine();
         try {
-            theCollection.addBook(BooksIO.deserializeFromFile("collection.dat"));
+            theCollection.addBook(BooksIO.deserializeFromFile(filename));
         } catch (IOException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
         }
+
         menu();
+
+        try {
+            BooksIO.serializeToFile(filename, theCollection.getAllBooks());
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private void menu(){
-        int answer;
 
+        int answer;
         do {
             System.out.println("1. Add book to collection");
             System.out.println("2. Remove book");
@@ -43,22 +59,18 @@ public class UserInterface {
                     break;
                 case 3:
                     StringBuilder info = new StringBuilder(10);
-                    for (Book book : searchForBooks()) {
+                    for (Book book : searchForBooks())
                             info.append(book.toString()+ '\n');
-                    }
-                    System.out.println(info.toString());
+                    if (info.length() == 0)
+                        System.out.println("No books found\n");
+                    else System.out.println(info);
                     break;
                 case 4:
                     listAllBooks();
                     break;
                 case 5:
-                    try {
-                        System.out.println("Bye Bye");
-                        BooksIO.serializeToFile("collection.dat", theCollection.getAllBooks());
-                    }
-                    catch (IOException e) {
-                        System.out.println(e.getMessage());
-                    }
+                    System.out.println("Bye Bye");
+                    break;
             }
         }
         while (answer != 5);
@@ -75,14 +87,7 @@ public class UserInterface {
         System.out.println("Add book to collection\n");
         title = enterBookName();
         genre = enterGenre();
-        do {
-            isbnNr = enterIsbn();
-            if (theCollection.searchForBooks(new IsbnMatcher(isbnNr.getIsbnStr())).size() > 0) {
-                System.out.println("ISBN already exists");
-                validData = false;
-            }
-            else validData = true;
-        }while (!validData);
+        isbnNr = enterIsbn();
 
         book = new Book(title, genre, isbnNr);
         System.out.println("Enter authors y/n?: ");
@@ -213,7 +218,6 @@ public class UserInterface {
         scan.nextLine();
         return LocalDate.of(date[0], date[1], date[2]);
     }
-
 
     private Isbn enterIsbn() {
         Isbn isbnNr = null;
